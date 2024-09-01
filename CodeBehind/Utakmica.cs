@@ -27,46 +27,62 @@ namespace CodeBehind
         {
             
             double verovatnoca = CalculateWinProbability(Team1, Team2);
-             //ovo ce nam izgenerisati random broj izmedju -1 i 1
-            
+            //ovo ce nam izgenerisati random broj izmedju -1 i 1
+
 
             if (verovatnoca > 0)  //ako je verovatnoca veca od nule to znaci da tim2 ima bolje rangiranje 
 
-               
+
             {
-                double randomFaktor = rnd.NextDouble() * 2 - 1;   
+                double randomFaktor = rnd.NextDouble() * 2 - 1;
                 //rnd.nextdouble generise broj izmedju 0 i 1 i 
                 Score1 = rnd.Next(70, 100);
 
-                //ukoliko random faktor izgenerise povoljnu vrednost (bilo sta manje izmedju -1 i verovatnoce koja je >0) timu 2 ce biti dodato od 1 do 15 koseva a ako izgenerise nepovoljnu bice mu oduzeto od 1 do 15 koseva
-                
-                
-                       
+                //ukoliko random faktor izgenerise povoljnu vrednost (bilo sta manje izmedju -1 i verovatnoce koja je >0) timu 2 ce biti dodati kosevi a ako izgenerise nepovoljnu bice mu oduzeti
 
-                   
-                
-               
+                //POBOLJSANJE MODELA -- uzecemo u obzir i da kos razlika bude zavisna od verovatnoce, dakle nece biti fiksno 1-15 koseva dodato, nego cemo to skalirati
 
-                Score2 = Score1 + (verovatnoca > randomFaktor ? +rnd.Next(1, 15) : -rnd.Next(1, 15));
+
+
+                if (verovatnoca > 0.5)   //ovde mozemo da kazemo da je dosta bolji tim 2 pa cemo mu omoguciti ubedljiviju pobedu, do cak 30 koseva razlike, a ako izgube, maksimalna razlika ce biti 15 poenta
+                {
+                    Score2 = Score1 + (verovatnoca > randomFaktor ? +rnd.Next(5, 30) : -rnd.Next(1, 15));
+                }
+                else  //ovde je verovatnoca izmedju 0 i 0.5 sto znaci da nije mnogo bolji tim2 pa cemo ogranicti maksimalnu pobedu sa 15 koseva razlike, gubitak je isti 
+                {
+
+                    Score2 = Score1 + (verovatnoca > randomFaktor ? +rnd.Next(1, 15) : -rnd.Next(1, 15));
+                }
             }
 
             else  //ako je verovatnoca manja od nule to znaci da tim1 ima bolje rangiranje
-            {   
+            {
 
                 //generisemo nasumicnu vrednost na intervalu izmedju -1 i 1 kodom ispod 
                 double randomFaktor = rnd.NextDouble() * 2 - 1;
                 Score2 = rnd.Next(70, 100);
 
-                //i sada, ukoliko se recimo dogodi da nam je verovatnoca -0.5 to znaci da je tim1 osetno bolji, i uslov ce nam zadovoljiti bilo koja vrednost koju randomfaktor da izmedju -0.5 i 1 a opet postoji neka sansa da tim2 pobedi ako randomfaktor da vrednost izmedju -1 i -0.5  
+                //i sada, ukoliko se recimo dogodi da nam je verovatnoca manja od -0.5 to znaci da je tim1 osetno bolji, i uslov ce nam zadovoljiti bilo koja vrednost koju randomfaktor da izmedju -0.5 i 1 a opet postoji neka sansa da tim2 pobedi ako randomfaktor da vrednost izmedju -1 i -0.5  
 
                 //sto je verovatnoca bliza -1, interval koji nam odgovara je veci 
 
-                
+                //poboljsanje modela 
 
+                if (verovatnoca < -0.5) {  //ovde takodje poboljsavamo model, tako da ako je verovatnoca manja od -0.5 tada razlika moze biti ubedljiva sa do 30 koseva razlike u korist tima1
+                    Score1 = Score2 + (verovatnoca < randomFaktor ? +rnd.Next(5, 30) : -rnd.Next(1, 15));
 
-                Score1 = Score2 + (verovatnoca < randomFaktor  ? + rnd.Next(1,15) : - rnd.Next(1,15));
+                }
 
+                else
+                {
+
+                    Score1 = Score2 + (verovatnoca < randomFaktor ? +rnd.Next(1, 15) : -rnd.Next(1, 15));
+                }
             }
+
+            //zakljucak: model je sada dovoljno fleksibilan da omogucava neizvenost a sa druge strane verovatno je da ce bolji timovi pobediti, dok je razlika u kosevima poprilicno odredjena razlikom u fiba rankingu
+
+
             
             if (Score1 > Score2)
             {
