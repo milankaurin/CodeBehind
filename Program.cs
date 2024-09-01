@@ -66,7 +66,16 @@ namespace CodeBehind
 
         }
 
-        public static Turnir LoadTournamentFromJson(string filePath)
+        public static BonusForme UcitajPrijateljske(string filePath)
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            string jsonString = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<BonusForme>(jsonString, options);
+        }
+
+
+
+            public static Turnir LoadTournamentFromJson(string filePath)
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             string jsonString = File.ReadAllText(filePath);

@@ -42,7 +42,7 @@ namespace CodeBehind
             {
                 double randomFaktor = rnd.NextDouble() * 2 - 1;
                 //rnd.nextdouble generise broj izmedju 0 i 1 i 
-                Score1 = rnd.Next(70, 100);
+                Score1 = (int)Math.Round((rnd.Next(70, 100)*Team1.Forma));  //mnozemo dobijeme poene sa formom
 
                 //ukoliko random faktor izgenerise povoljnu vrednost (bilo sta manje izmedju -1 i verovatnoce koja je >0) timu 2 ce biti dodati kosevi a ako izgenerise nepovoljnu bice mu oduzeti
 
@@ -52,7 +52,7 @@ namespace CodeBehind
 
                 if (verovatnoca > 0.5)   //ovde mozemo da kazemo da je dosta bolji tim 2 pa cemo mu omoguciti ubedljiviju pobedu, do cak 30 koseva razlike, a ako izgube, maksimalna razlika ce biti 15 poenta
                 {
-                    Score2 = Score1 + (verovatnoca > randomFaktor ? +rnd.Next(5, 30) : -rnd.Next(1, 15));
+                    Score2 = (int)Math.Round((Score1 + (verovatnoca > randomFaktor ? +rnd.Next(5, 30) : -rnd.Next(1, 15))) * Team2.Forma);  // mnozenje dobijenih poena sa formom
                 }
                 else  //ovde je verovatnoca izmedju 0 i 0.5 sto znaci da nije mnogo bolji tim2 pa cemo ogranicti maksimalnu pobedu sa 15 koseva razlike, gubitak je isti 
                 {
@@ -98,6 +98,10 @@ namespace CodeBehind
                 Team2.Porazi++;
                 Pobednik = Team1;
                 Gubitnik = Team2;
+                Team1.Forma = Team1.Forma * 1.02;
+                if (Team1.Forma > 1.1) { Team1.Forma = 1.1; }
+                Team2.Forma = Team2.Forma * 0.98;
+                if (Team2.Forma < 0.93) { Team2.Forma = 0.93; }
             }
             else
             {
@@ -107,6 +111,10 @@ namespace CodeBehind
                 Team2.Bodovi += 2;
                 Pobednik = Team2;
                 Gubitnik = Team1;
+                Team2.Forma = Team2.Forma * 1.02;
+                if (Team2.Forma > 1.1) { Team2.Forma = 1.1; }
+                Team1.Forma = Team1.Forma * 0.98;
+                if (Team1.Forma < 0.93) { Team1.Forma = 0.93; }
             }
 
             Team1.ScoredPoints += Score1;

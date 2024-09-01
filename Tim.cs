@@ -31,6 +31,9 @@ namespace CodeBehind
         public int? pomocnaRazlika { get; set; } 
         public int Rang { get; set; } = 0;
 
+        public double Forma { get; set; } = 1;
+
+
         //tostring Kanada      3 / 0 / 6 / 267 / 247 / +20
         public override string ToString()
         {
