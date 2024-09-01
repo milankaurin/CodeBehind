@@ -5,6 +5,13 @@ using System.Text.Json;
 
 namespace CodeBehind
 {
+#pragma warning disable CS8618
+#pragma warning disable CS8603
+
+#pragma warning disable CS8604
+#pragma warning disable CS8602
+
+
     internal class Program
     {
         public static List<Utakmica> TekmeGrupaA = new List<Utakmica>();

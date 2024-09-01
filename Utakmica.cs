@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace CodeBehind
 {
+#pragma warning disable CS8618
+#pragma warning disable CS8603
+
+#pragma warning disable CS8604
+#pragma warning disable CS8602
+
     public class Utakmica
     {
         public Tim Team1 { get; set; }
