@@ -22,6 +22,7 @@ namespace CodeBehind
         public int Porazi {  get; set; } = 0;
         public int KosRazlika {  get; set; } = 0;
 
+        public int? pomocnaRazlika { get; set; } 
         public int Rang { get; set; } = 0;
 
         //tostring Kanada      3 / 0 / 6 / 267 / 247 / +20

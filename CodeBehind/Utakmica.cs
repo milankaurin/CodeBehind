@@ -16,6 +16,7 @@ namespace CodeBehind
         public Tim? Pobednik {  get; set; }
         public Tim? Gubitnik { get; set; }
 
+        Random rnd = new Random();
         public Utakmica (Tim t1, Tim t2)
         {
             Team1 = t1;
@@ -24,19 +25,29 @@ namespace CodeBehind
 
         public void PlayMatch()
         {
-            Random rnd = new Random();
+            
             double verovatnoca = CalculateWinProbability(Team1, Team2);
              //ovo ce nam izgenerisati random broj izmedju -1 i 1
             
 
             if (verovatnoca > 0)  //ako je verovatnoca veca od nule to znaci da tim2 ima bolje rangiranje 
+
+               
             {
-                double randomFaktor = rnd.NextDouble() * 2 - 1;
+                double randomFaktor = rnd.NextDouble() * 2 - 1;   
                 //rnd.nextdouble generise broj izmedju 0 i 1 i 
                 Score1 = rnd.Next(70, 100);
 
+                //ukoliko random faktor izgenerise povoljnu vrednost (bilo sta manje izmedju -1 i verovatnoce koja je >0) timu 2 ce biti dodato od 1 do 15 koseva a ako izgenerise nepovoljnu bice mu oduzeto od 1 do 15 koseva
+                
+                
+                       
 
-                Score2 = Score1 + (verovatnoca > randomFaktor ?  +rnd.Next(1, 15) : -rnd.Next(1, 15));
+                   
+                
+               
+
+                Score2 = Score1 + (verovatnoca > randomFaktor ? +rnd.Next(1, 15) : -rnd.Next(1, 15));
             }
 
             else  //ako je verovatnoca manja od nule to znaci da tim1 ima bolje rangiranje
@@ -44,13 +55,13 @@ namespace CodeBehind
 
                 //generisemo nasumicnu vrednost na intervalu izmedju -1 i 1 kodom ispod 
                 double randomFaktor = rnd.NextDouble() * 2 - 1;
-                Score2 = rnd.Next(50, 100);
+                Score2 = rnd.Next(70, 100);
 
-                //i sada, ukoliko se recimo dogodi da nam je verovatnoca -0.5 to znaci da je tim1 osetno bolji, i uslov ce nam zadovoljiti bilo koja vrednost koju randomfaktor da izmedju -0.5 i 1 a opet postoji manja sansa da tim2 pobedi ako randomfaktor da vrednost izmedju -1 i -0.5  
+                //i sada, ukoliko se recimo dogodi da nam je verovatnoca -0.5 to znaci da je tim1 osetno bolji, i uslov ce nam zadovoljiti bilo koja vrednost koju randomfaktor da izmedju -0.5 i 1 a opet postoji neka sansa da tim2 pobedi ako randomfaktor da vrednost izmedju -1 i -0.5  
 
                 //sto je verovatnoca bliza -1, interval koji nam odgovara je veci 
 
-                //isto je primenjeno i za gornji slucaj samo obrnuto, gore gledamo da sto nam je veca verovatnoca pobede tima2 to nam je interval veci
+                
 
 
                 Score1 = Score2 + (verovatnoca < randomFaktor  ? + rnd.Next(1,15) : - rnd.Next(1,15));
@@ -85,7 +96,7 @@ namespace CodeBehind
         private static double CalculateWinProbability(Tim team1, Tim team2)
         {
             double razlika = team1.FIBARanking - team2.FIBARanking;
-            double maksRazlika = 29;
+            double maksRazlika = 33;
 
 
             return razlika/maksRazlika;   //sto je ovaj broj blizi broju 1 to je tim2 bolji a sto je broj blizi -1 to je tim1 bolji

@@ -22,25 +22,31 @@ namespace CodeBehind
         public static List<Tuple<Tim, Tim>> cetvrtEF = new List<Tuple<Tim, Tim>>();
         public static List<Tuple<Tim,Tim>> LevaGrana = new List<Tuple<Tim, Tim>>();
         public static List<Tuple<Tim, Tim>> DesnaGrana = new List<Tuple<Tim, Tim>>();
+
+        public static Random random = new Random();
         public static void Main(string[] args)
         {
             string jsonFilePath = "groups.json";
             Turnir turnir = LoadTournamentFromJson(jsonFilePath);
             
-            //PrintTeams(turnir.A, "Grupa A");
-            //PrintTeams(turnir.B, "Grupa B");
-            //PrintTeams(turnir.C, "Grupa C");
+            PrintTeams(turnir.A, "Grupa A");
+            PrintTeams(turnir.B, "Grupa B");
+            PrintTeams(turnir.C, "Grupa C");
+            Console.WriteLine("\n\n\n Započinjem turnir...\n\n\n");
 
 
             SimulacijaKola(turnir);
             DodeliGrupuTimovima();
             DodajUProsliDaljeIRangirajPaPrebaciUSesire();
 
-            Console.WriteLine("\n\n\n\n PROSLI DALJE:");
+            Console.WriteLine("\n\n\n\n PROŠLI DALJE:");
             for (int i = 0; i < prosliDalje.Count; i++)
             {
+                if (i == 8) Console.Write("ispao---");
                 Console.WriteLine(prosliDalje[i].ToString());
+               
             }
+
             ispisiSesire();
             promesajSesireUkrstiCetvrt();
             PromesajZaPoluFinala();
@@ -97,7 +103,7 @@ namespace CodeBehind
             //PRIMENA ROUND ROBIN-a
             for (int i = 1; i <= 3; i++) //ukupno cemo imati tri kola da bi svaka ekipa igrala sa svakom jednom
             {
-                Console.WriteLine("Grupna faza - " + i.ToString() + ". kolo:");
+                Console.WriteLine("\nGrupna faza - " + i.ToString() + ". kolo:\n");
                 Console.WriteLine(" Grupa A:");
                 for (int j = 0; j < 2; j++)  //a imacemo dve utakmice po kolu
                 {
@@ -112,7 +118,7 @@ namespace CodeBehind
                 }
                 grupaA = RotacijaZaRoundRobimSemPrvog(grupaA);
 
-                Console.WriteLine(" Grupa B:");
+                Console.WriteLine("\n Grupa B:");
                 for (int j = 0; j < 2; j++)  //a imacemo dve utakmice po kolu
                 {
 
@@ -125,7 +131,7 @@ namespace CodeBehind
                 }
                 grupaB = RotacijaZaRoundRobimSemPrvog(grupaB);
 
-                Console.WriteLine(" Grupa C:");
+                Console.WriteLine("\n Grupa C:");
                 for (int j = 0; j < 2; j++)  //a imacemo dve utakmice po kolu
                 {
 
@@ -139,13 +145,13 @@ namespace CodeBehind
                 grupaC = RotacijaZaRoundRobimSemPrvog(grupaC);
             }
 
-            Console.WriteLine("\nZavrsena je cela grupna faza!");
+            Console.WriteLine("\nZavršena je cela grupna faza!\nKonačan plasman po grupama:");
 
             //RACUNANJE KOS RAZLIKE, RANGIRANJE TIMOVA UNUTAR GRUPA, ISPIS GRUPA
 
             Console.WriteLine("\n    Grupa A (Ime tima    Pobede / Porazi / Bodovi / ScoredPoints / ReceivedPoints / KosRazlika)\n");
             kosRazlikaGrupa(grupaA);
-            Rangiraj(grupaA, TekmeGrupaA);
+           grupaA= Rangiraj(grupaA, TekmeGrupaA);
 
             for (int i = 0; i < grupaA.Count; i++)
             {
@@ -156,7 +162,7 @@ namespace CodeBehind
 
             Console.WriteLine("\n    Grupa B (Ime tima    Pobede / Porazi / Bodovi / ScoredPoints / ReceivedPoints / KosRazlika)\n");
             kosRazlikaGrupa(grupaB);
-            Rangiraj(grupaB, TekmeGrupaB);
+           grupaB= Rangiraj(grupaB, TekmeGrupaB);
             for (int i = 0; i < grupaB.Count; i++)
             {
                 Console.WriteLine(grupaB[i].ToString());
@@ -165,7 +171,7 @@ namespace CodeBehind
 
             Console.WriteLine("\n    Grupa C (Ime tima    Pobede / Porazi / Bodovi / ScoredPoints / ReceivedPoints / KosRazlika)\n");
             kosRazlikaGrupa(grupaC);
-            Rangiraj(grupaC, TekmeGrupaC);
+            grupaC = Rangiraj(grupaC, TekmeGrupaC);
             for (int i = 0; i < grupaC.Count; i++)
             {
 
@@ -188,38 +194,105 @@ namespace CodeBehind
 
         }
 
-        public static void Rangiraj(List<Tim> grupa, List<Utakmica> tekmeGrupna)
+        public static List<Tim> Rangiraj(List<Tim> grupa, List<Utakmica> tekmeGrupna)
         {
 
             // U slučaju da 3 tima iz iste grupe imaju isti broj bodova, kriterijum za rangiranje biće razlika u poenima u međusobnim utakmicama između ta 3 tima (takozvano formiranje kruga).
 
-            //if (triTimaIstiBodovi(grupa) == true)
-            //{
-            //    List<Tim> pom = grupa.OrderByDescending(t => t.Bodovi).ToList();
+            if (triTimaIstiBodovi(grupa) == true)
+            {
 
-            //    if ((pom[0].Bodovi == pom[1].Bodovi) && (pom[1].Bodovi == pom[2].Bodovi))
-            //    {
-            //        //ovde prva tri elementa sortiramo
-            //        int prvi, drugi, treci;
+                grupa = grupa.OrderByDescending(t => t.Bodovi).ToList();
+
+                if ((grupa[0].Bodovi == grupa[1].Bodovi) && (grupa[1].Bodovi == grupa[2].Bodovi))  // -- prva tri tima imaju isti broj bodova
+                {
+                    //pom0     pom1    pom2
+                    int prvi = 0, drugi = 0, treci = 0;
+
+                    foreach (Utakmica t in tekmeGrupna)
+                    {
+                        if ((t.Team1 == grupa[0] && t.Team2 == grupa[1]) || (t.Team1 == grupa[1] && t.Team2 == grupa[0]))
+                        {
+                            prvi += t.Team1 == grupa[0] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                            drugi += t.Team1 == grupa[1] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        }
+                        else if ((t.Team1 == grupa[0] && t.Team2 == grupa[2]) || (t.Team1 == grupa[2] && t.Team2 == grupa[0]))
+                        {
+                            prvi += t.Team1 == grupa[0] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                            treci += t.Team1 == grupa[2] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        }
+                        else if ((t.Team1 == grupa[1] && t.Team2 == grupa[2]) || (t.Team1 == grupa[2] && t.Team2 == grupa[1]))
+                        {
+                            drugi += t.Team1 == grupa[1] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                            treci += t.Team1 == grupa[2] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        }
+
+
+                    }
+                    grupa[0].pomocnaRazlika = prvi;
+                    grupa[1].pomocnaRazlika = drugi;
+                    grupa[2].pomocnaRazlika = treci;
+                    
+                    grupa = grupa.OrderByDescending(t => t.Bodovi).ThenByDescending(t=>t.pomocnaRazlika).ToList();
+                    foreach (Tim tim in grupa)
+                    {
+                        tim.Rang = grupa.IndexOf(tim) + 1;
+                       
+                    }
+                    return grupa;
 
 
 
-            //    }
-            //    else if ((pom[1].Bodovi == pom[2].Bodovi) && (pom[1].Bodovi == pom[3].Bodovi))
-            //    { //ovde poslednja 3 sortiramo
+                }
+            
+            else if ((grupa[1].Bodovi == grupa[2].Bodovi) && (grupa[1].Bodovi == grupa[3].Bodovi))  // -- poslednja tri tima imaju isti broj bodova
+            {
+
+                int drugi = 0, treci = 0, cetvrti = 0;
+                foreach (Utakmica t in tekmeGrupna)
+                {
+                    if ((t.Team1 == grupa[1] && t.Team2 == grupa[2]) || (t.Team1 == grupa[2] && t.Team2 == grupa[1]))
+                    {
+                        drugi += t.Team1 == grupa[1] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        treci += t.Team1 == grupa[2] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                    }
+                    else if ((t.Team1 == grupa[1] && t.Team2 == grupa[3]) || (t.Team1 == grupa[3] && t.Team2 == grupa[1]))
+                    {
+                        drugi += t.Team1 == grupa[1] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        cetvrti += t.Team1 == grupa[3] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                    }
+                    else if ((t.Team1 == grupa[2] && t.Team2 == grupa[3]) || (t.Team1 == grupa[3] && t.Team2 == grupa[2]))
+                    {
+                        treci += t.Team1 == grupa[2] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                        cetvrti += t.Team1 == grupa[3] ? t.Score1 - t.Score2 : t.Score2 - t.Score1;
+                    }
+                }
+
+                grupa[1].pomocnaRazlika = drugi;
+                grupa[2].pomocnaRazlika = treci;
+                grupa[3].pomocnaRazlika = cetvrti;
+                grupa = grupa.OrderByDescending(t => t.Bodovi).ThenByDescending(a => a.pomocnaRazlika).ToList();
+                foreach (Tim tim in grupa)
+                {
+                    tim.Rang = grupa.IndexOf(tim) + 1;
+                }
+                return grupa;
 
 
-            //    }
+
+            }
 
 
 
 
 
-            //    return;
-            //}
 
-            //Timovi u okviru grupe se rangiraju na osnovu broja bodova. U slučaju da dva tima iz iste grupe imaju isti broj bodova, rezultat međusobnog susreta će biti korišćen kao kriterijum za rangiranje.
-            Tim cuvar;
+        }
+
+        //Timovi u okviru grupe se rangiraju na osnovu broja bodova. U slučaju da dva tima iz iste grupe imaju isti broj bodova, rezultat međusobnog susreta će biti korišćen kao kriterijum za rangiranje.
+
+
+        Tim cuvar;
             for (int i = 0; i < grupa.Count - 1; i++)
             {
                 for (int j = i + 1; j < grupa.Count; j++)
@@ -253,7 +326,7 @@ namespace CodeBehind
                 tim.Rang = grupa.IndexOf(tim) + 1;
             }
 
-
+            return grupa;
 
         }
 
@@ -363,26 +436,26 @@ namespace CodeBehind
 
         public static void ispisiSesire()
         {
-            Console.WriteLine("\nSesiri:");
-            Console.WriteLine(" Sesir D:");
+            Console.WriteLine("\nŠesiri:");
+            Console.WriteLine(" Šesir D:");
             foreach (Tim t in SesirD)
             {
                 Console.WriteLine($"   {t.Team}");
 
             }
-            Console.WriteLine(" Sesir E:");
+            Console.WriteLine(" Šesir E:");
             foreach (Tim t in SesirE)
             {
                 Console.WriteLine($"   {t.Team}");
 
             }
-            Console.WriteLine(" Sesir F:");
+            Console.WriteLine(" Šesir F:");
             foreach (Tim t in SesirF)
             {
                 Console.WriteLine($"   {t.Team}");
 
             }
-            Console.WriteLine(" Sesir G:");
+            Console.WriteLine(" Šesir G:");
             foreach (Tim t in SesirG)
             {
                 Console.WriteLine($"   {t.Team}");
@@ -403,7 +476,7 @@ namespace CodeBehind
             li.Add(SesirG);
             foreach (List<Tim> l in li)
             {
-                Random random = new Random();
+                
                 int a = random.Next(0, 2);
                 Tim cuvar;
                 cuvar = l[0];
@@ -448,7 +521,7 @@ namespace CodeBehind
         
         public static void PromesajZaPoluFinala()
         {
-            Random random = new Random();
+            
             int a = random.Next(0, 2);
             LevaGrana.Add(cetvrtDG[a]);     //nasumican par iz DG dela stavljamo u levu granu a ovaj drugi u desnu
             DesnaGrana.Add(cetvrtDG[Math.Abs(a - 1)]);
@@ -478,7 +551,7 @@ namespace CodeBehind
         public static void simulacijaPlayOff()
         {
             List<Tim> polufinalistiRedom = new List<Tim>();  //ovde smo kreirali listu redom ali to nam je u redu jer redom smestamo pobednike pa cemo upariti prvog polufinalistu sa drugim i treceg sa cetvrtim
-            Console.WriteLine("\n\nCetvrtfinale:");
+            Console.WriteLine("\n\nČetvrtfinale:");
 
             foreach (Tuple<Tim, Tim> par in LevaGrana)
             {
@@ -504,7 +577,7 @@ namespace CodeBehind
             polu2.PlayMatch();
             Console.WriteLine($"  {polu2.Team1.Team}  -  {polu2.Team2.Team} ({polu2.Score1} : {polu2.Score2})");
 
-            Console.WriteLine("\n\nUtakmica za trece mesto:");
+            Console.WriteLine("\n\nUtakmica za treće mesto:");
 
             Utakmica zaTrece = new Utakmica(polu1.Gubitnik, polu2.Gubitnik);
             zaTrece.PlayMatch();
