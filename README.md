@@ -11,6 +11,7 @@ Učitava podatke o grupama iz groups.json fajla.
 Simulira sve mečeve grupne faze koristeći "round-robin" metod.
 Rangira timove u grupama i formira šešire za eliminacionu fazu.
 Simulira eliminacionu fazu i prikazuje rezultate.
+
 Turnir.cs:
 
 Definiše klasu Turnir koja sadrži listu timova za svaku grupu (A, B, i C).
