@@ -98,10 +98,10 @@ namespace CodeBehind
                 Team2.Porazi++;
                 Pobednik = Team1;
                 Gubitnik = Team2;
-                Team1.Forma = Team1.Forma * 1.02;
-                if (Team1.Forma > 1.1) { Team1.Forma = 1.1; }
-                Team2.Forma = Team2.Forma * 0.98;
-                if (Team2.Forma < 0.93) { Team2.Forma = 0.93; }
+                Team1.Forma = Team1.Forma * 1.04;
+                if (Team1.Forma > 1.15) { Team1.Forma = 1.15; }
+                Team2.Forma = Team2.Forma * 0.97;
+                if (Team2.Forma < 0.95) { Team2.Forma = 0.95; }
             }
             else
             {
@@ -111,10 +111,10 @@ namespace CodeBehind
                 Team2.Bodovi += 2;
                 Pobednik = Team2;
                 Gubitnik = Team1;
-                Team2.Forma = Team2.Forma * 1.02;
-                if (Team2.Forma > 1.1) { Team2.Forma = 1.1; }
+                Team2.Forma = Team2.Forma * 1.04;
+                if (Team2.Forma > 1.15) { Team2.Forma = 1.15; }
                 Team1.Forma = Team1.Forma * 0.98;
-                if (Team1.Forma < 0.93) { Team1.Forma = 0.93; }
+                if (Team1.Forma < 0.95) { Team1.Forma = 0.95; }
             }
 
             Team1.ScoredPoints += Score1;
@@ -126,7 +126,10 @@ namespace CodeBehind
         private static double CalculateWinProbability(Tim team1, Tim team2)
         {
             double razlika = team1.FIBARanking - team2.FIBARanking;
-            double maksRazlika = 33;
+            double maksRazlika = 34; // -  iako je zapravu u nasem json fajlu maks razlika u fiba rangu 33, ja sam se odlucio da postavim tu vrednost na 34, da CAK i u utakmici juzni sudan-usa, juzni sudan ima malu malenu sansu za pobedu
+            
+
+           
 
 
             return razlika/maksRazlika;   //sto je ovaj broj blizi broju 1 to je tim2 bolji a sto je broj blizi -1 to je tim1 bolji
