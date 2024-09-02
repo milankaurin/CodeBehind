@@ -66,12 +66,7 @@ namespace CodeBehind
 
         }
 
-        public static BonusForme UcitajPrijateljske(string filePath)
-        {
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            string jsonString = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<BonusForme>(jsonString, options);
-        }
+    
 
 
 

@@ -98,6 +98,9 @@ namespace CodeBehind
                 Team2.Porazi++;
                 Pobednik = Team1;
                 Gubitnik = Team2;
+                
+                //ažuriranje forme nakon odigranog meča
+
                 Team1.Forma = Team1.Forma * 1.04;
                 if (Team1.Forma > 1.15) { Team1.Forma = 1.15; }
                 Team2.Forma = Team2.Forma * 0.97;
@@ -111,6 +114,9 @@ namespace CodeBehind
                 Team2.Bodovi += 2;
                 Pobednik = Team2;
                 Gubitnik = Team1;
+
+                //ažuriranje forme nakon odigranog meča
+
                 Team2.Forma = Team2.Forma * 1.04;
                 if (Team2.Forma > 1.15) { Team2.Forma = 1.15; }
                 Team1.Forma = Team1.Forma * 0.98;
