@@ -1,5 +1,6 @@
 # Projekat: Simulacija Grupne faze i eliminacione faze Olimpijskih igara
-Ovaj projekat simulira grupnu fazu i eliminacionu fazu košarkaškog turnira prema pravilima koja uključuju FIBA rang liste, bodovanje, i eliminacionu strukturu.
+**Napomena: povodom bonus dela, implementirana je forma, ali nije uključen faktor prijateljskih utakmica u računanje.**
+Ovaj projekat simulira grupnu fazu i eliminacionu fazu košarkaškog turnira prema pravilima koja uključuju FIBA rang liste, bodovanje, i eliminacionu strukturu. 
 
 # Arhitektura Projekta
 Projekt sadrži sledeće glavne klase:
